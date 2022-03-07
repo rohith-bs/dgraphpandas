@@ -75,7 +75,9 @@ def to_rdf(
         source_file_name = os.path.basename(frame).split('.')[0]
 
         result = []
-        for index, frame in enumerate(pd.read_csv(frame, chunksize=chunk_size, **(read_csv_options))):
+        for index, frame in enumerate(pd.read_csv(frame, chunksize=chunk_size, sep="\t", **(read_csv_options))):
+            # This is to handle . in the data can be come one of the configurations.
+            frame.replace(".", np.nan, inplace=True)
             result.append(to_rdf_from_frame(frame, config, config_key, transform_func, source_file_name, output_dir, index, **(kwargs)))
         return result
     else:
